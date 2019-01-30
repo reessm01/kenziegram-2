@@ -1,0 +1,14 @@
+body{
+    max-width: 600px;
+    width:100%;
+}
+
+.images{
+    width:100px;
+    height:100px;
+}
+
+form { 
+    align-self:center;
+    margin:0px;
+}
