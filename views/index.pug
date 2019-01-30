@@ -1,0 +1,19 @@
+doctype html
+html(lang="en")
+    head
+        title= "Kenziegram"
+        style
+            include styles.css
+    body
+        div(id="main")
+
+            h1 KenzieGram
+            div(class="posts")
+
+                form(method="POST" action="/upload" enctype="multipart/form-data")
+
+                    input#upload.form-control(type="file" name="myImage")
+                    input.btn.btn-primary(type="submit" id="submit" value="Submit")
+
+            each image in imageArray
+                img(src=image style="width: 100%")

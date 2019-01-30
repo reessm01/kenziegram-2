@@ -4,6 +4,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 const multer = require('multer')
 const express = require('express')
+const pug = require('pug')
 const port = 4000
 const paths = require("path")
 const cors = require('cors')
@@ -13,6 +14,8 @@ const publicFolderPath = paths.join(__dirname, "public")
 
 const path = './public/uploads'
 
+app.set('views', './views')
+app.set('view engine', 'pug')
 app.use(express.static(path))
 app.use(cors())
 app.use(express.json())
@@ -56,31 +59,10 @@ app.get("/", (req, res) => {
 
     fs.readdir(path, function (err, items) {
         console.log(items)
-        renderIndex(res, items, template)
+        res.render('index', {imageArray: items})
     })
 
 })
-
-function renderIndex(res, items, template) {
-    res.send(`
-    <head>
-        <link rel="stylesheet" type="text/css" href="styles.css">
-    </head>
-    <body><div style="max-width: 600px; text-align: center; min-width:360px; width:100%;">
-    ${template}
-        <div style="width:100%; display: flex; justify-content: center; margin:20px; align-items:center;">
-
-             <form method="POST" action="/upload" enctype="multipart/form-data">
-                <input type="file" name="myImage" id="upload"/>
-                <input type = "submit" id="submit" />
-             </form>
-
-            </div>
-        <div>
-            ${items.map(img => { return `<img src = "${img}" style="width: 100%;">` })}
-        </div>
-    </div></body>`)
-}
 
 
 
@@ -92,23 +74,7 @@ app.post('/upload', (req, res) => {
             if (req.file == undefined) {
 
             } else {
-                res.send(`
-                    <head>
-                        <link rel="stylesheet" type="text/css" href="styles.css">
-                    </head>
-                    <body><div style="max-width: 600px; text-align: center; min-width:360px; width:100%;">
-                        ${template}
-                    <div style="width:100%; display: flex; flex-direction:column; justify-content: center; margin:20 0 20 0; align-items:center;">
-
-                        <h2>Photo Uploaded!</h2>
-                        <form method="GET" action="/">
-                            <button><img src="https://img.icons8.com/color/48/000000/circled-left-2.png"></button>
-                        </form>
-                    </div>
-                    <div>
-                        <img src = "${req.file.filename}" style="width: 100%;">
-                    </div>
-                    </div></body>`)
+                res.render('uploadSuccessful', {uploadedImage: req.file.filename})
             }
         }
     });

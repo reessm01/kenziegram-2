@@ -1,0 +1,16 @@
+doctype html
+html(lang="en")
+    head
+        title= "Upload successful"
+        style
+            include styles.css
+    <body>
+        div(id="main")
+            h1 KenzieGram
+            div(class="posts")
+
+            h2 Photo Uploaded!
+            form(method="GET" action="/")
+                input.btn.btn-primary(type="submit" class = "backButton" value="")
+            div
+                img(src = uploadedImage style="width: 100%;")

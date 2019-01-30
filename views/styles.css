@@ -1,0 +1,44 @@
+body{
+    max-width: 600px;
+    width:100%;
+}
+
+.images{
+    width:100px;
+    height:100px;
+}
+
+form { 
+    align-self:center;
+    margin:0px;
+}
+
+.posts{
+    display:flex;
+    width:100%;
+    justify-content: center;
+    margin: 20px;
+    align-items: center;
+
+}
+
+#main{
+    max-width: 600px;
+    text-align: center;
+    min-width:360px;
+    width:100%;
+}
+
+.backButton{
+    background: transparent url(https://img.icons8.com/color/48/000000/circled-left-2.png) no-repeat;
+    background-size:cover;
+    height:50px;
+    width:50px;
+    cursor:pointer;
+    border:none;
+    margin-bottom:10px;
+}
+
+.backButton span{
+    display:none;
+}
