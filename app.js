@@ -13,6 +13,7 @@ const app = express()
 const publicFolderPath = paths.join(__dirname, "public")
 
 const path = './public/uploads'
+let lastUpdate = Date.now()
 
 app.set('views', './views')
 app.set('view engine', 'pug')
@@ -59,9 +60,32 @@ app.get("/", (req, res) => {
 
     fs.readdir(path, function (err, items) {
         console.log(items)
-        res.render('index', {imageArray: items})
+        res.render('index', { imageArray: items })
     })
 
+})
+
+app.post('/latest', (req, res) => {
+    if (req.url === '/latest') {
+        fs.readdir(path, function (err, items) {
+            let newImages = []
+            items.forEach(image => {
+                let lastModified = fs.statSync(path + "/" + image).mtimeMs
+                if (lastModified > req.body.updated) {
+                    newImages.push(image)
+                }
+            })
+
+            if (newImages.length > 0) {
+                res.send({ images: newImages, status: 200 })
+                console.log('New images sent.')
+            } else {
+                res.statusMessage = 'No content'
+                res.send({ status: 204 })
+                console.log('No new content sent.')
+            }
+        })
+    }
 })
 
 
@@ -74,7 +98,7 @@ app.post('/upload', (req, res) => {
             if (req.file == undefined) {
 
             } else {
-                res.render('uploadSuccessful', {uploadedImage: req.file.filename})
+                res.render('uploadSuccessful', { uploadedImage: req.file.filename })
             }
         }
     });

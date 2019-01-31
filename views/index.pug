@@ -1,19 +1,23 @@
 doctype html
 html(lang="en")
     head
-        title= "Kenziegram"
+        title="Kenziegram"
         style
             include styles.css
     body
         div(id="main")
 
             h1 KenzieGram
+            h2(id = "message")
             div(class="posts")
 
                 form(method="POST" action="/upload" enctype="multipart/form-data")
 
                     input#upload.form-control(type="file" name="myImage")
                     input.btn.btn-primary(type="submit" id="submit" value="Submit")
-
-            each image in imageArray
-                img(src=image style="width: 100%")
+            div(id="images")
+                each image in imageArray
+                    img(src=image class="images")
+    
+    script
+        include index.js
