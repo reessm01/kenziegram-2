@@ -11,9 +11,11 @@ const cors = require('cors')
 const fs = require('fs')
 const app = express()
 const publicFolderPath = paths.join(__dirname, "public")
+let rawData = fs.readFileSync('comments.json')
+let data = JSON.parse(rawData)
+let bodyParser = require('body-parser')
 
 const path = './public/uploads'
-let lastUpdate = Date.now()
 
 app.set('views', './views')
 app.set('view engine', 'pug')
@@ -21,9 +23,10 @@ app.use(express.static(path))
 app.use(cors())
 app.use(express.json())
 app.use(express.static(publicFolderPath))
+app.use(bodyParser.urlencoded({ extended: false }))
 
 const storage = multer.diskStorage({
-    destination: './public/uploads/',
+    destination: './public/uploads',
     filename: function (req, file, cb) {
         cb(null, Date.now() + paths.extname(file.originalname));
     }
@@ -57,10 +60,11 @@ function checkFileType(file, cb) {
 }
 
 app.get("/", (req, res) => {
-
+    // Object.keys(data).forEach(object => console.log(data[object].comments[0].name))
     fs.readdir(path, function (err, items) {
-        console.log(items)
-        res.render('index', { imageArray: items })
+        fs.readdir('./public/portrait', (err, portrait) => {
+            res.render('index', { imageArray: items, imageData: data, myPortrait: portrait[0] })
+        })
     })
 
 })
@@ -98,11 +102,41 @@ app.post('/upload', (req, res) => {
             if (req.file == undefined) {
 
             } else {
+                data[req.file.filename] = {
+                    comments: []
+                }
+                fs.writeFile('comments.json', JSON.stringify(data), err => {
+                    if (err) throw err
+                    console.log('File saved.')
+                })
                 res.render('uploadSuccessful', { uploadedImage: req.file.filename })
             }
         }
-    });
-});
+    })
+})
+
+app.post('/:imageName/comments', (req, res) => {
+    console.log(req.params.imageName)
+    console.log(req.body.entry)
+    data[req.params.imageName].comments.push({ name: "Dan", comment: req.body.entry })
+    console.log(data[req.params.imageName].comments)
+    return
+})
+
+app.get('/:imageName/comments', (req, res) => {
+    console.log('working')
+
+    fs.readdir(path, function (err, items) {
+        for (img of items) {
+            if (img == req.params.imageName) {
+                console.log('so true bruh')
+                res.render('imageFocus', { image: img, comments: data[req.params.imageName].comments }, function (err, html) {
+                    if (err) console.log(err)
+                })
+            }
+        }
+    })
+})
 
 // more rubric details for self-paced students:
 //  - comments for images should persist across server restarts. this means that you will need to properly read from and write to a `comments.json` 

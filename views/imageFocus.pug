@@ -1,0 +1,44 @@
+doctype html
+html(lang="en")
+    head
+        title="Kenzagram"
+        link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pacifico")
+        link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro")
+        style
+            include styles.css
+
+    body
+        div(id="imageFocusMain")
+            div(id="header")
+                div(class="box")
+
+                    img(src=("https://instagram-brand.com/wp-content/uploads/2016/11/app-icon2.png") class="logo")
+
+                div(class="box") 
+
+                    div(style="font-family:'Pacifico', cursive; font-size:50px; align-self:center; justify-self:center; width:100%; padding:20px") KenzaGram
+
+            div(id="imageDetails")
+                div(class="post")
+                    //- div(class="nameBlock")
+                    //-     img(src=("https://scontent-ort2-1.cdninstagram.com/vp/a8ec01031bd1086a5ea38f9ca6f281f1/5CDA7670/t51.2885-19/10882011_608024355998122_920268023_a.jpg?_nc_ht=scontent-ort2-1.cdninstagram.com") class="avatar")
+                    //-     span #[strong scotty_reese]
+
+
+                    div(class="imageBlock")
+                        img(src=image class="images")
+                        div(style="display:flex; width:100%; height:30px; margin-bottom:10px;")
+                            img(src="https://img.icons8.com/ios-glyphs/30/000000/hearts.png" class="favicon")
+                            img(src="https://img.icons8.com/material-outlined/30/000000/speech-bubble-with-dots.png" class="favicon")
+                            img(src="https://img.icons8.com/ios-glyphs/30/000000/share-rounded.png" class="favicon")
+                        if comments.length>0 && image !== undefined
+                            each entry in comments
+                                span(class = "commentString") #[strong !{entry.name}] 
+                                span(class = "commentString") !{entry.comment}
+                                br
+                        div(style="display:flex; align-items:center; ")
+                            div(style="border-style:solid; border-width:1px 0px 0px 0px; border-color:lightgrey; width:100%; margin:0px 10px 0px 10px; ")
+                                input(type="text" style="width:95%; margin:10px; font-size:14px; border:none; margin-top:20px" placeholder="Add a comment..." name="comment" onkeyup="postComment(this, event)")
+
+    //- script
+    //-     include index.js
