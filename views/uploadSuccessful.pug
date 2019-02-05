@@ -1,16 +1,48 @@
 doctype html
 html(lang="en")
     head
-        title= "Upload successful"
+        title= "Kenzagram/Upload"
+        link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pacifico")
+        link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro")
         style
             include styles.css
     body
         div(id="main")
-            h1 KenzieGram
-            div(class="posts")
 
-            h2 Photo Uploaded!
-            form(method="GET" action="/")
-                input.btn.btn-primary(type="submit" class = "backButton" value="")
-            div
-                img(src = uploadedImage style="width: 100%;")
+            div(id="header")
+                div(class="box")
+                    img(src=("https://instagram-brand.com/wp-content/uploads/2016/11/app-icon2.png") class="logo")
+
+                div(class="box") 
+                    form(method="GET" action="/")
+                        a(href="http://localhost:4000/")
+                            div(style="font-family:'Pacifico', cursive; font-size:50px; align-self:center; justify-self:center; width:100%; padding:20px; font-weight:bold; color:black; outline:none") KenzaGram
+                    
+            div(class="input")
+
+                form(method="POST" action="/upload" enctype="multipart/form-data")
+
+                    input#upload.form-control(type="file" name="myImage")
+                    input.btn.btn-primary(type="submit" id="submit" value="Submit")
+                    
+            div(class="post")
+                    div(class="nameBlock")
+                        img(src=("https://scontent-ort2-1.cdninstagram.com/vp/a8ec01031bd1086a5ea38f9ca6f281f1/5CDA7670/t51.2885-19/10882011_608024355998122_920268023_a.jpg?_nc_ht=scontent-ort2-1.cdninstagram.com") class="avatar")
+                        span #[strong scotty_reese]
+
+
+                    div(class="imageBlock")
+                        img(src=uploadedImage class="images")
+                        div(style="display:flex; width:100%; height:30px; margin-bottom:10px;")
+                            img(src="https://img.icons8.com/ios-glyphs/30/000000/hearts.png" class="favicon")
+                            img(src="https://img.icons8.com/material-outlined/30/000000/speech-bubble-with-dots.png" class="favicon")
+                            img(src="https://img.icons8.com/ios-glyphs/30/000000/share-rounded.png" class="favicon")
+                        div(style="margin-left:12px; margin-right:10px")
+                            table
+                        span(style="color:grey; cursor: pointer;" class="authorString" class="link") What do you think?
+                        div(style="display:flex; align-items:center; ")
+                            div(style="border-style:solid; border-width:1px 0px 0px 0px; border-color:lightgrey; width:100%; margin:0px 10px 0px 10px; ")
+                                input(type="text" style="width:95%; margin:10px; font-size:14px; border:none; margin-top:20px" placeholder="Add a comment..." name="comment" onkeyup="postComment(this, event)")
+
+    script
+        include index.js

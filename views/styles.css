@@ -22,6 +22,7 @@ body{
     display:block;
     width:100%;
     margin-bottom:10px;
+    cursor: pointer;
 }
 
 .imageBlock{
@@ -29,8 +30,13 @@ body{
     display:block;
     width:100%;
     padding-bottom:15px;
-    margin-top:25px;
     background-color:white;
+}
+
+#comments{
+    clear:both;
+    margin:10px;
+    height:390px;
 }
 
 #header{
@@ -46,10 +52,15 @@ body{
     margin-right:96px;
 }
 
+.authorString{
+    text-align:left;
+    margin: 10px 20px 10px 15px;
+    line-height:1.5em;
+}
 
 .commentString{
     text-align:left;
-    margin: 10px 20px 10px 20px;
+    margin: 10px 20px 10px 5px;
     line-height:1.5em;
 }
 
@@ -69,7 +80,6 @@ body{
 .nameBlock{
     clear:both;
     display:flex;
-    float:left;
     align-items:center;
     background-color:white;
     width:100%;
@@ -116,18 +126,74 @@ form {
     visibility:hidden;
 }
 
-  #imageDetails{
+#overlay{
+    position: fixed;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+  }
+
+  #overlayMain{
       display:flex;
       background-color:white;
-      height:80%;
-      width:80%;
       margin:auto;
-      max-width:935px;
-      max-height:600px;
+      width:935px;
+      height:600px;
       cursor:auto;
   }
 
   #imageFocus{
+      height:auto;
       width:auto;
-      max-width:600px;
+      max-width:66%;
+  }
+
+  .postSpecific{
+      display:block;
+      width:100%;
+      overflow:hidden;
+      font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  #overlay{
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  input{
+      word-wrap: break-word;
+      word-break:break-all;
+  }
+
+  textarea{
+    font-family: 'Source Sans Pro', sans-serif;
+    width: 578px;
+    margin:10px;
+    font-size:14px;
+    border-style:hidden;
+    margin-top:20px;
+  }
+
+td{
+    height:20px;
+}
+
+table{
+    width:100%;
+}
+
+tbody{
+    margin:0px;
+}
+
+a:visited {
+    text-decoration: none;
   }

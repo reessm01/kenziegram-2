@@ -55,27 +55,32 @@ autoUpdate()
 
 function postComment(element, event) {
     event.preventDefault()
-    if (event.keyCode === 13) {
+    console.log(element.value == '')
+    if (element.value != '') {
+        if (event.keyCode === 13) {
 
-        drawNewComment(element)
-        let string = element.parentNode.parentNode.parentNode.firstChild.src.substring(22)
-        string = string
-        console.log(string)
-        sendData(element)
-        element.value = ''
+            drawNewComment(element)
+            console.log(element.parentNode.parentNode.previousSibling.previousSibling.children[0])
+            let string = element.parentNode.parentNode.parentNode.firstChild.src.substring(22)
+            string = string
+            console.log(string)
+            sendData(element)
+            element.value = ''
+        }
     }
 }
 
 function drawNewComment(element) {
 
-    const parentDiv = element.parentNode.parentNode.parentNode
-    const refNode = element.parentNode.parentNode.previousSibling.previousSibling
+    const parentDiv = element.parentNode.parentNode.previousSibling.previousSibling.children[0]
 
-    const commentSpan = document.createElement('span')
-    const authorSpan = document.createElement('span')
-    authorSpan.classList.add('commentString')
+    const tableRow = document.createElement('tr')
+
+    const authorSpan = document.createElement('td')
     authorSpan.style.fontWeight = 'bold'
-    commentSpan.classList.add('commentString')
+    authorSpan.style.width = '40px'
+
+    const commentSpan = document.createElement('td')
 
     const commentAuthor = "Dan "
     const commentString = element.value
@@ -85,10 +90,10 @@ function drawNewComment(element) {
 
     authorSpan.appendChild(authorNode)
     commentSpan.appendChild(commentNode)
-    commentSpan.appendChild(document.createElement('br'))
+    tableRow.appendChild(authorSpan)
+    tableRow.appendChild(commentSpan)
 
-    parentDiv.insertBefore(authorSpan, refNode)
-    parentDiv.insertBefore(commentSpan, refNode)
+    parentDiv.appendChild(tableRow)
 }
 
 function sendData(element) {
@@ -102,24 +107,72 @@ function sendData(element) {
     })
 }
 
-function renderOverlay(element, event) {
+function renderOverlay(element) {
+    const overlay = document.getElementById('overlay')
+    const imageFocus = document.getElementById('imageFocus')
     disruptor = false
-    event.preventDefault()
 
     if (element.classList[0] != "images") {
         element = element.parentNode.firstChild
     }
 
+    overlay.style.display = 'flex'
     const imageName = element.src.substring(22)
-    console.log(imageName)
-
     const url = '/' + imageName + '/comments'
+
     fetch(url, {
         method: 'GET',
-        action: '/' + imageName + '/comments',
         headers: { 'Content-Type': 'application/json' }
     })
-        .then(promise => promise)
-        .then(res.render)
+        .then(promise => promise.json())
+        .then(res => {
+            console.log(res.comments)
+            imageFocus.src = element.src
+            renderComments(res.comments)
+        })
         .catch(err => console.log(err))
+}
+
+function renderComments(commentArray) {
+    const commentTable = document.getElementById('table')
+
+    if (commentArray.length >= 1) {
+        for (commentInfo of commentArray) {
+            const tableRow = document.createElement('tr')
+
+            const authorSpan = document.createElement('td')
+            authorSpan.classList.add('authorString')
+            authorSpan.style.fontWeight = 'bold'
+            authorSpan.style.width = "15%"
+
+            const commentSpan = document.createElement('td')
+            commentSpan.classList.add('commentString')
+            commentSpan.style.wordWrap = "break-word"
+            commentSpan.style.width = "85%"
+
+            const authorNode = document.createTextNode(commentInfo.name)
+            const commentNode = document.createTextNode(commentInfo.comment)
+
+            authorSpan.appendChild(authorNode)
+            commentSpan.appendChild(commentNode)
+
+            tableRow.appendChild(authorSpan)
+            tableRow.appendChild(commentSpan)
+            commentTable.appendChild(tableRow)
+        }
+
+    }
+}
+
+function overlayReset() {
+    const commentTable = document.getElementById('table')
+    console.log(commentTable.children.length)
+    const overlay = document.getElementById('overlay')
+    let index = 0
+    while (commentTable.children.length !== 0) {
+        let child = commentTable.children[index]
+        commentTable.removeChild(child)
+    }
+
+    overlay.style.display = 'none'
 }

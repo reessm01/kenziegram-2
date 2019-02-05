@@ -26,7 +26,6 @@ html(lang="en")
                     input.btn.btn-primary(type="submit" id="submit" value="Submit")
             div(id="feed")
                 each image in imageArray
-                    - var pic = !{image};
                     div(class="post")
                         div(class="nameBlock")
                             img(src=("https://scontent-ort2-1.cdninstagram.com/vp/a8ec01031bd1086a5ea38f9ca6f281f1/5CDA7670/t51.2885-19/10882011_608024355998122_920268023_a.jpg?_nc_ht=scontent-ort2-1.cdninstagram.com") class="avatar")
@@ -34,21 +33,43 @@ html(lang="en")
 
 
                         div(class="imageBlock")
-                            img(src=image class="images" onclick="renderOverlay(this, event)")
+                            img(src=image class="images" onclick="renderOverlay(this)")
                             div(style="display:flex; width:100%; height:30px; margin-bottom:10px;")
                                 img(src="https://img.icons8.com/ios-glyphs/30/000000/hearts.png" class="favicon")
                                 img(src="https://img.icons8.com/material-outlined/30/000000/speech-bubble-with-dots.png" class="favicon")
                                 img(src="https://img.icons8.com/ios-glyphs/30/000000/share-rounded.png" class="favicon")
-                            if imageData[image].comments.length>0 && imageData[image] !== undefined
-                                span(class = "commentString") #[strong !{imageData[image].comments[0].name}] 
-                                span(class = "commentString") !{imageData[image].comments[0].comment}
-                                br
-                                if imageData[image].comments.length>1 
-                                span(style="color:grey" class="commentString" class="link" onclick="renderOverlay(this)") View all !{imageData[image].comments.length} comments
-                                br
-                                div(style="display:flex; align-items:center; ")
-                                    div(style="border-style:solid; border-width:1px 0px 0px 0px; border-color:lightgrey; width:100%; margin:0px 10px 0px 10px; ")
-                                        input(type="text" style="width:95%; margin:10px; font-size:14px; border:none; margin-top:20px" placeholder="Add a comment..." name="comment" onkeyup="postComment(this, event)")
-                                        
+                            div(style="margin-left:12px; margin-right:10px")
+                                table
+                                    if imageData[image].comments.length>0 && imageData[image] !== undefined
+                                        tr
+                                            td(style="width:40px; font-weight:bold") !{imageData[image].comments[0].name}
+                                            td !{imageData[image].comments[0].comment}
+
+                            if imageData[image].comments.length>1 
+                                span(style="color:grey; cursor: pointer;" class="authorString" class="link" onclick="renderOverlay(this)") View all !{imageData[image].comments.length} comments
+                            else
+                                span(style="color:grey; cursor: pointer;" class="authorString" class="link" onclick="renderOverlay(this)") What do you think?
+                            div(style="display:flex; align-items:center; ")
+                                div(style="border-style:solid; border-width:1px 0px 0px 0px; border-color:lightgrey; width:100%; margin:0px 10px 0px 10px; ")
+                                    input(type="text" style="width:95%; margin:10px; font-size:14px; border:none; margin-top:20px" placeholder="Add a comment..." name="comment" onkeyup="postComment(this, event)")
+
+
+            div(id="overlay" onclick="overlayReset()")
+                div(id="overlayMain")
+                    img(id="imageFocus")
+                    div(class="postSpecific")
+                        div(class="nameBlock" style="width: 300px;margin:15px; padding-bottom:10px; border-style:solid; border-width: 0px 0px 1px 0px; border-color:lightgrey; overflow:hidden;")
+                            img(src=("https://scontent-ort2-1.cdninstagram.com/vp/a8ec01031bd1086a5ea38f9ca6f281f1/5CDA7670/t51.2885-19/10882011_608024355998122_920268023_a.jpg?_nc_ht=scontent-ort2-1.cdninstagram.com") class="avatar")
+                            span #[strong scotty_reese]
+                        div(id="comments")
+                            table(id="table")
+                        div(style="display:flex; width:100%; height:30px; margin-bottom:10px;")
+                                img(src="https://img.icons8.com/ios-glyphs/30/000000/hearts.png" class="favicon")
+                                img(src="https://img.icons8.com/material-outlined/30/000000/speech-bubble-with-dots.png" class="favicon")
+                                img(src="https://img.icons8.com/ios-glyphs/30/000000/share-rounded.png" class="favicon")
+                        div(style="display:flex; align-items:center; ")
+                            div(style="border-style:solid; border-width:1px 0px 0px 0px; border-color:lightgrey; width:100%; margin:0px 10px 0px 10px; ")
+                                textarea(type="text" cols="10" rows="4" wrap="hard" placeholder="Add a comment..." name="comment" onkeyup="postComment(this, event)")
+
     script
         include index.js

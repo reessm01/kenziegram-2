@@ -63,6 +63,7 @@ app.get("/", (req, res) => {
     // Object.keys(data).forEach(object => console.log(data[object].comments[0].name))
     fs.readdir(path, function (err, items) {
         fs.readdir('./public/portrait', (err, portrait) => {
+            console.log(items)
             res.render('index', { imageArray: items, imageData: data, myPortrait: portrait[0] })
         })
     })
@@ -124,18 +125,9 @@ app.post('/:imageName/comments', (req, res) => {
 })
 
 app.get('/:imageName/comments', (req, res) => {
-    console.log('working')
-
-    fs.readdir(path, function (err, items) {
-        for (img of items) {
-            if (img == req.params.imageName) {
-                console.log('so true bruh')
-                res.render('imageFocus', { image: img, comments: data[req.params.imageName].comments }, function (err, html) {
-                    if (err) console.log(err)
-                })
-            }
-        }
-    })
+    console.log(req.params.imageName)
+    console.log(data[req.params.imageName])
+    res.send(data[req.params.imageName])
 })
 
 // more rubric details for self-paced students:
