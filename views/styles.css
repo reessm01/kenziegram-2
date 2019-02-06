@@ -33,7 +33,7 @@ body{
     background-color:white;
 }
 
-#comments{
+.commentBox{
     clear:both;
     margin:10px;
     height:390px;
@@ -149,12 +149,12 @@ form {
       width:935px;
       height:600px;
       cursor:auto;
+      z-index:5;
   }
 
   #imageFocus{
       height:auto;
-      width:auto;
-      max-width:66%;
+      width:66%;
   }
 
   .postSpecific{

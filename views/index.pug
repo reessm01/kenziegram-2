@@ -38,7 +38,7 @@ html(lang="en")
                                 img(src="https://img.icons8.com/ios-glyphs/30/000000/hearts.png" class="favicon")
                                 img(src="https://img.icons8.com/material-outlined/30/000000/speech-bubble-with-dots.png" class="favicon")
                                 img(src="https://img.icons8.com/ios-glyphs/30/000000/share-rounded.png" class="favicon")
-                            div(style="margin-left:12px; margin-right:10px")
+                            div(style="margin-left:12px; margin-right:10px" id='comments')
                                 table
                                     if imageData[image].comments.length>0 && imageData[image] !== undefined
                                         tr
@@ -61,7 +61,7 @@ html(lang="en")
                         div(class="nameBlock" style="width: 300px;margin:15px; padding-bottom:10px; border-style:solid; border-width: 0px 0px 1px 0px; border-color:lightgrey; overflow:hidden;")
                             img(src=("https://scontent-ort2-1.cdninstagram.com/vp/a8ec01031bd1086a5ea38f9ca6f281f1/5CDA7670/t51.2885-19/10882011_608024355998122_920268023_a.jpg?_nc_ht=scontent-ort2-1.cdninstagram.com") class="avatar")
                             span #[strong scotty_reese]
-                        div(id="comments")
+                        div(class="commentBox" id="comments")
                             table(id="table")
                         div(style="display:flex; width:100%; height:30px; margin-bottom:10px;")
                                 img(src="https://img.icons8.com/ios-glyphs/30/000000/hearts.png" class="favicon")
@@ -69,7 +69,7 @@ html(lang="en")
                                 img(src="https://img.icons8.com/ios-glyphs/30/000000/share-rounded.png" class="favicon")
                         div(style="display:flex; align-items:center; ")
                             div(style="border-style:solid; border-width:1px 0px 0px 0px; border-color:lightgrey; width:100%; margin:0px 10px 0px 10px; ")
-                                textarea(type="text" cols="10" rows="4" wrap="hard" placeholder="Add a comment..." name="comment" onkeyup="postComment(this, event)")
+                                input(type="text" style="width:95%; margin:10px; font-size:14px; border:none; margin-top:20px" placeholder="Add a comment..." name="comment" onkeyup="postOverlayComment(this, event)")
 
     script
         include index.js

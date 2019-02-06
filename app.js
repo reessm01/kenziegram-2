@@ -87,7 +87,6 @@ app.post('/latest', (req, res) => {
             } else {
                 res.statusMessage = 'No content'
                 res.send({ status: 204 })
-                console.log('No new content sent.')
             }
         })
     }
@@ -117,11 +116,12 @@ app.post('/upload', (req, res) => {
 })
 
 app.post('/:imageName/comments', (req, res) => {
-    console.log(req.params.imageName)
-    console.log(req.body.entry)
     data[req.params.imageName].comments.push({ name: "Dan", comment: req.body.entry })
-    console.log(data[req.params.imageName].comments)
-    return
+    fs.writeFile('comments.json', JSON.stringify(data), err => {
+        if (err) throw err
+        console.log('File saved.')
+    })
+    res.send(201)
 })
 
 app.get('/:imageName/comments', (req, res) => {

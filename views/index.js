@@ -1,49 +1,53 @@
-let disruptor = true
+let mainOverlayClicked = false
+document.getElementById('overlayMain').addEventListener('click', () => {
+    mainOverlayClicked = true
+})
 
 function autoUpdate() {
     const messageBox = document.getElementById('message')
-    const commentImageBox = document.getElementById('images')
+    const commentImageBox = document.getElementById('imageBox')
     let lastUpdated = Date.now()
     let attempts = 0
 
     const fetchLatestImages = () => {
-        if (disruptor) {
-            setTimeout(() => {
-                fetch('/latest', {
-                    method: 'POST',
-                    body: JSON.stringify({ updated: lastUpdated }),
-                    headers: { 'Content-Type': 'application/json' }
+
+        setTimeout(() => {
+            fetch('/latest', {
+                method: 'POST',
+                body: JSON.stringify({ updated: lastUpdated }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(promise => promise.json())
+                .then(res => {
+                    if (res.status === 204) {
+                        attempts = 0
+                        fetchLatestImages()
+                    } else if (res.status === 200) {
+                        lastUpdated = Date.now()
+                        attempts = 0
+                        res.images.forEach(img => {
+                            let commentImage = document.createElement('img')
+                            commentImage.src = img
+                            console.log(img)
+                            commentImage.classList.add("images")
+                            commentImageBox.prepend(commentImage)
+                            fetchLatestImages()
+                        })
+                    }
                 })
-                    .then(promise => promise.json())
-                    .then(res => {
-                        if (res.status === 204) {
-                            attempts = 0
-                            fetchLatestImages()
-                        } else if (res.status === 200) {
-                            lastUpdated = Date.now()
-                            res.images.forEach(img => {
-                                attempts = 0
-                                let commentImage = document.createElement('img')
-                                commentImage.src = img
-                                commentImage.classList.add("images")
-                                commentImageBox.prepend(commentImage)
-                                fetchLatestImages()
-                            })
-                        }
-                    })
-                    .catch(error => {
-                        if (attempts < 1) {
-                            attempts++
-                            fetchLatestImages()
-                        }
-                        else {
-                            const message = document.createTextNode("Status 444: No response.")
-                            messageBox.appendChild(message)
-                            console.log(error)
-                        }
-                    })
-            }, 5000)
-        }
+                .catch(error => {
+                    if (attempts < 1) {
+                        attempts++
+                        fetchLatestImages()
+                    }
+                    else {
+                        const message = document.createTextNode("Status 444: No response.")
+                        messageBox.appendChild(message)
+                        console.log(error)
+                    }
+                })
+        }, 5000)
+
     }
 
 
@@ -55,24 +59,40 @@ autoUpdate()
 
 function postComment(element, event) {
     event.preventDefault()
-    console.log(element.value == '')
+    console.log("hello")
     if (element.value != '') {
         if (event.keyCode === 13) {
 
             drawNewComment(element)
-            console.log(element.parentNode.parentNode.previousSibling.previousSibling.children[0])
             let string = element.parentNode.parentNode.parentNode.firstChild.src.substring(22)
-            string = string
-            console.log(string)
-            sendData(element)
+            sendData(string, element)
+            element.value = ''
+        }
+    }
+}
+
+function postOverlayComment(element, event) {
+    event.preventDefault()
+    if (element.value != '') {
+        if (event.keyCode === 13) {
+
+            drawNewComment(element)
+            console.log(element.parentNode.parentNode.parentNode)
+            let string = element.parentNode.parentNode.parentNode.parentNode.firstChild.src.substring(22)
+            sendData(string, element)
             element.value = ''
         }
     }
 }
 
 function drawNewComment(element) {
-
-    const parentDiv = element.parentNode.parentNode.previousSibling.previousSibling.children[0]
+    let parentDiv = undefined
+    const iteratableDiv = element.parentNode.parentNode.parentNode
+    for (let index = 0; index < iteratableDiv.children.length; index++) {
+        if (iteratableDiv.children[index].id == 'comments') {
+            parentDiv = iteratableDiv.children[index].children[0]
+        }
+    }
 
     const tableRow = document.createElement('tr')
 
@@ -96,8 +116,7 @@ function drawNewComment(element) {
     parentDiv.appendChild(tableRow)
 }
 
-function sendData(element) {
-    const imageName = element.parentNode.parentNode.parentNode.firstChild.src.substring(22)
+function sendData(imageName, element) {
     const comment = element.value
     const url = '/' + imageName + '/comments'
     fetch(url, {
@@ -165,14 +184,22 @@ function renderComments(commentArray) {
 }
 
 function overlayReset() {
-    const commentTable = document.getElementById('table')
-    console.log(commentTable.children.length)
-    const overlay = document.getElementById('overlay')
-    let index = 0
-    while (commentTable.children.length !== 0) {
-        let child = commentTable.children[index]
-        commentTable.removeChild(child)
-    }
+    console.log(mainOverlayClicked)
+    if (mainOverlayClicked == false) {
 
-    overlay.style.display = 'none'
+        const commentTable = document.getElementById('table')
+        const overlay = document.getElementById('overlay')
+        let index = 0
+        while (commentTable.children.length !== 0) {
+            let child = commentTable.children[index]
+            commentTable.removeChild(child)
+        }
+
+        overlay.style.display = 'none'
+    }
+    let count = 0
+    while (count != 100) {
+        mainOverlayClicked = false
+        count++
+    }
 }
